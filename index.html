@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto de Grado | Sergio Silvera Murcia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f7f9;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Roboto Slab', serif;
+        }
+        .stat-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-top: 4px solid #2563eb;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .lang-btn.active {
+            font-weight: 700;
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+        .concept-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            border-left: 4px solid #1d4ed8;
+            transition: all 0.3s ease-in-out;
+        }
+        .accordion-header {
+            cursor: pointer;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-content.open {
+            max-height: 500px;
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+        .accordion-icon.open {
+            transform: rotate(180deg);
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #d1d5db;
+        }
+        .timeline-item {
+            position: relative;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid #3b82f6;
+            border-radius: 9999px;
+            z-index: 10;
+        }
+        .timeline-content {
+            width: calc(50% - 2rem);
+        }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .clickable-image {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .clickable-image:hover {
+            transform: scale(1.03);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/logo.png" alt="Logo Universidad del Norte" class="h-8">
+                <span class="text-sm font-bold text-gray-700 hidden sm:inline">Sergio Silvera Murcia | Uninorte</span>
+            </div>
+             <div>
+                <button id="es-btn" class="lang-btn px-2 py-1 text-sm text-gray-600 active">Español</button>
+                <span class="text-gray-400">|</span>
+                <button id="en-btn" class="lang-btn px-2 py-1 text-sm text-gray-600">English</button>
+             </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-8 text-center mt-4">
+        <h1 data-translate-key="mainTitle" class="text-3xl md:text-4xl font-bold text-blue-800"></h1>
+        <p data-translate-key="mainSubtitle" class="text-lg md:text-xl mt-2 text-gray-600"></p>
+    </div>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <section id="context" class="my-8">
+            <h2 data-translate-key="contextTitle" class="text-2xl font-bold mb-4 text-blue-700"></h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <div class="text-center mb-8">
+                    <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Mor_Indicator.png" alt="Gráfico del indicador de morosidad en Latinoamérica" class="clickable-image rounded-lg shadow-md w-full max-w-3xl mx-auto h-auto cursor-pointer">
+                    <p data-translate-key="imageCaption" class="text-center text-sm text-gray-500 mt-2 italic"></p>
+                </div>
+                <div class="text-gray-600 leading-relaxed space-y-4 max-w-4xl mx-auto">
+                    <p data-translate-key="contextP1"></p>
+                    <p data-translate-key="contextP2"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenge" class="my-12">
+             <h2 data-translate-key="challengeTitle" class="text-2xl font-bold mb-4 text-blue-700"></h2>
+             <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                <h3 data-translate-key="problemQuestionTitle" class="text-xl font-bold mb-3 text-red-800"></h3>
+                <p data-translate-key="problemQuestion" class="text-gray-700 italic"></p>
+            </div>
+        </section>
+
+        <section id="proposal" class="my-12">
+            <h2 data-translate-key="proposalTitle" class="text-2xl font-bold mb-4 text-blue-700"></h2>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div class="md:col-span-2 bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                    <h3 data-translate-key="proposalSubtitle" class="text-xl font-bold mb-3 text-blue-800"></h3>
+                    <p data-translate-key="proposalText" class="text-gray-700"></p>
+                </div>
+                <div class="md:col-span-3 bg-white p-6 rounded-lg shadow-md">
+                    <h3 data-translate-key="objectivesTitle" class="text-xl font-bold mb-4 text-gray-800"></h3>
+                    <ul class="space-y-3">
+                        <li data-translate-key="obj1" class="flex items-start"><span class="text-blue-600 font-bold mr-2">1.</span><span class="flex-1"></span></li>
+                        <li data-translate-key="obj2" class="flex items-start"><span class="text-blue-600 font-bold mr-2">2.</span><span class="flex-1"></span></li>
+                        <li data-translate-key="obj3" class="flex items-start"><span class="text-blue-600 font-bold mr-2">3.</span><span class="flex-1"></span></li>
+                        <li data-translate-key="obj4" class="flex items-start"><span class="text-blue-600 font-bold mr-2">4.</span><span class="flex-1"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="theory" class="my-12">
+            <h2 data-translate-key="theoryTitle" class="text-2xl md:text-3xl font-bold mb-8 text-center text-blue-700"></h2>
+            <div class="mb-12">
+                <h3 data-translate-key="theoreticalFrameworkTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                <div class="space-y-4">
+                    <div class="concept-card p-4"><div class="accordion-header flex justify-between items-center"><h4 data-translate-key="mlConceptsTitle" class="font-bold text-lg"></h4><span class="accordion-icon text-blue-600 text-2xl">▼</span></div><div class="accordion-content"><ul data-translate-key="mlConceptsDesc" class="pt-4 text-sm text-gray-600 border-t mt-4 space-y-3"></ul></div></div>
+                    <div class="concept-card p-4"><div class="accordion-header flex justify-between items-center"><h4 data-translate-key="financialConceptsTitle" class="font-bold text-lg"></h4><span class="accordion-icon text-blue-600 text-2xl">▼</span></div><div class="accordion-content"><ul data-translate-key="financialConceptsDesc" class="pt-4 text-sm text-gray-600 border-t mt-4 space-y-3"></ul></div></div>
+                    <div class="concept-card p-4"><div class="accordion-header flex justify-between items-center"><h4 data-translate-key="evaluationConceptsTitle" class="font-bold text-lg"></h4><span class="accordion-icon text-blue-600 text-2xl">▼</span></div><div class="accordion-content"><ul data-translate-key="evaluationConceptsDesc" class="pt-4 text-sm text-gray-600 border-t mt-4 space-y-3"></ul></div></div>
+                </div>
+            </div>
+            <div>
+                <h3 data-translate-key="sotaTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12"><div class="bg-white p-6 rounded-lg shadow-md"><h4 data-translate-key="sotaAppsTitle" class="font-bold text-lg mb-3"></h4><ul class="space-y-2 text-sm"><li data-translate-key="sotaApp1"></li><li data-translate-key="sotaApp2"></li><li data-translate-key="sotaApp3"></li><li data-translate-key="sotaApp4" class="font-semibold text-blue-700"></li></ul></div><div class="mt-6 md:mt-0"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Co-ocurrence_Network.png" alt="Red de co-ocurrencia de términos" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><p data-translate-key="cooccurrenceCaption" class="text-center text-sm text-gray-500 mt-2 italic"></p></div></div>
+                <div class="relative timeline-container mx-auto px-4">
+                    <div class="timeline-item flex justify-start mb-12"><div class="timeline-dot"></div><div class="timeline-content bg-white p-6 rounded-lg shadow-lg"><h4 data-translate-key="sotaEra1Title" class="font-bold text-lg mb-2 text-blue-800"></h4><p data-translate-key="sotaEra1Desc" class="text-sm mb-4"></p><button data-modal-target="authors-modal-1" class="author-modal-trigger text-sm font-semibold text-blue-600 hover:underline" data-translate-key="viewAuthors"></button></div></div>
+                    <div class="timeline-item flex justify-end mb-12"><div class="timeline-dot"></div><div class="timeline-content bg-white p-6 rounded-lg shadow-lg text-right"><h4 data-translate-key="sotaEra2Title" class="font-bold text-lg mb-2 text-blue-800"></h4><p data-translate-key="sotaEra2Desc" class="text-sm mb-4"></p><button data-modal-target="authors-modal-2" class="author-modal-trigger text-sm font-semibold text-blue-600 hover:underline" data-translate-key="viewAuthors"></button></div></div>
+                    <div class="timeline-item flex justify-start mb-12"><div class="timeline-dot"></div><div class="timeline-content bg-white p-6 rounded-lg shadow-lg"><h4 data-translate-key="sotaEra3Title" class="font-bold text-lg mb-2 text-blue-800"></h4><p data-translate-key="sotaEra3Desc" class="text-sm mb-4"></p><button data-modal-target="authors-modal-3" class="author-modal-trigger text-sm font-semibold text-blue-600 hover:underline" data-translate-key="viewAuthors"></button></div></div>
+                    <div class="timeline-item flex justify-end mb-12"><div class="timeline-dot"></div><div class="timeline-content bg-white p-6 rounded-lg shadow-lg text-right"><h4 data-translate-key="sotaEra4Title" class="font-bold text-lg mb-2 text-blue-800"></h4><p data-translate-key="sotaEra4Desc" class="text-sm mb-4"></p><button data-modal-target="authors-modal-4" class="author-modal-trigger text-sm font-semibold text-blue-600 hover:underline" data-translate-key="viewAuthors"></button></div></div>
+                    <div class="timeline-item flex justify-start mb-12"><div class="timeline-dot"></div><div class="timeline-content bg-white p-6 rounded-lg shadow-lg"><h4 data-translate-key="sotaEra5Title" class="font-bold text-lg mb-2 text-blue-800"></h4><p data-translate-key="sotaEra5Desc" class="text-sm mb-4"></p><button data-modal-target="authors-modal-5" class="author-modal-trigger text-sm font-semibold text-blue-600 hover:underline" data-translate-key="viewAuthors"></button></div></div>
+                    <div class="timeline-item flex justify-end"><div class="timeline-dot"></div><div class="timeline-content bg-white p-6 rounded-lg shadow-lg text-right"><h4 data-translate-key="sotaEra6Title" class="font-bold text-lg mb-2 text-blue-800"></h4><p data-translate-key="sotaEra6Desc" class="text-sm mb-4"></p><button data-modal-target="authors-modal-6" class="author-modal-trigger text-sm font-semibold text-blue-600 hover:underline" data-translate-key="viewAuthors"></button></div></div>
+                </div>
+                 <div class="mt-12 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg"><p data-translate-key="sotaConclusion" class="text-gray-700 italic"></p></div>
+            </div>
+        </section>
+
+        <section id="methodology" class="my-12">
+            <h2 data-translate-key="methodologyTitle" class="text-2xl md:text-3xl font-bold mb-8 text-center text-blue-700"></h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <div><h3 data-translate-key="methodologyDiagramTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Phases.png" alt="Diagrama de las fases de la metodología" class="clickable-image rounded-lg shadow-md w-full max-w-4xl h-auto mx-auto cursor-pointer"></div>
+                <div class="border-t pt-8"><h3 data-translate-key="edaTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3><div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"><div class="lg:col-span-1"><h4 data-translate-key="targetVarTitle" class="text-lg font-semibold mb-3"></h4><p data-translate-key="targetVarDesc" class="text-sm text-gray-600 mb-4"></p><div class="overflow-x-auto"><table class="w-full text-sm text-left text-gray-500"><thead class="text-xs text-gray-700 uppercase bg-gray-50"><tr><th scope="col" class="px-6 py-3" data-translate-key="tableHeaderState"></th><th scope="col" class="px-6 py-3" data-translate-key="tableHeaderProp"></th><th scope="col" class="px-6 py-3" data-translate-key="tableHeaderCount"></th></tr></thead><tbody><tr class="bg-white border-b"><th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">CAIDO</th><td class="px-6 py-4">67.37%</td><td class="px-6 py-4">21,408</td></tr><tr class="bg-white border-b"><th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">MANTENIDO</th><td class="px-6 py-4">20.34%</td><td class="px-6 py-4">6,463</td></tr><tr class="bg-white"><th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">NORMALIZADO</th><td class="px-6 py-4">12.29%</td><td class="px-6 py-4">3,906</td></tr></tbody></table></div></div><div class="lg:col-span-2"><h4 data-translate-key="edaPlotsTitle" class="text-lg font-semibold mb-3"></h4><div class="grid grid-cols-2 md:grid-cols-4 gap-4"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/bx_gestiones.png" alt="Boxplot de Gestiones" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Dist_SaldoTotal.png" alt="Distribución del Saldo Total" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/FreqRango.png" alt="Frecuencia por Rango" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Dist_DiasMora.png" alt="Distribución de Días en Mora" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/bx_diasMora.png" alt="Boxplot de Días en Mora" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/TotalGestiones.png" alt="Total de Gestiones" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/HeatMap.png" alt="Mapa de Calor de Correlaciones" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/DistHab11.png" alt="Distribución Hábito 11" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"></div></div></div></div>
+                <div class="border-t pt-8"><h3 data-translate-key="benchmarkTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3><div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"><div><h4 data-translate-key="nestedCvTitle" class="text-lg font-semibold mb-3"></h4><p data-translate-key="nestedCvDesc" class="text-sm text-gray-600 mb-4"></p></div><div class="border border-gray-200 rounded-lg p-4 bg-gray-50"><div class="border-2 border-blue-500 rounded p-4 text-center"><p class="font-bold text-blue-600" data-translate-key="outerLoop"></p><div class="flex justify-center gap-2 my-2"><div class="w-8 h-8 bg-blue-200 rounded text-xs flex items-center justify-center">1</div><div class="w-8 h-8 bg-blue-200 rounded text-xs flex items-center justify-center">2</div><div class="w-8 h-8 bg-blue-200 rounded text-xs flex items-center justify-center">3</div><div class="w-8 h-8 bg-blue-200 rounded text-xs flex items-center justify-center">4</div><div class="w-8 h-8 bg-blue-200 rounded text-xs flex items-center justify-center">5</div></div><div class="border border-green-500 rounded p-3 mt-3 text-center bg-white"><p class="font-bold text-green-600 text-sm" data-translate-key="innerLoop"></p><div class="flex justify-center gap-1 my-2"><div class="w-6 h-6 bg-green-200 rounded text-xs flex items-center justify-center">1</div><div class="w-6 h-6 bg-green-200 rounded text-xs flex items-center justify-center">2</div><div class="w-6 h-6 bg-green-200 rounded text-xs flex items-center justify-center">3</div><div class="w-6 h-6 bg-green-200 rounded text-xs flex items-center justify-center">4</div><div class="w-6 h-6 bg-green-200 rounded text-xs flex items-center justify-center">5</div></div></div></div></div></div><h4 data-translate-key="hyperparamsTitle" class="text-lg font-semibold mt-8 mb-3"></h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Hiperparameter_basic_model.png" alt="Hiperparámetros Modelos Básicos" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Hiperparameter_adv_model.png" alt="Hiperparámetros Modelos Avanzados" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"></div><h4 data-translate-key="metricsTitle" class="text-lg font-semibold mt-8 mb-3"></h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Metrics_macro.png" alt="Métricas Macro" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"><img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Metrics_weighted.png" alt="Métricas Weighted" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer"></div><div class="mt-8 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg"><p data-translate-key="benchmarkConclusion" class="text-gray-700"></p></div></div>
+            </div>
+        </section>
+
+        <section id="results" class="my-12">
+            <h2 data-translate-key="resultsTitle" class="text-2xl md:text-3xl font-bold mb-8 text-center text-blue-700"></h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <div>
+                    <h3 data-translate-key="championModelTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
+                        <div class="stat-card"><p class="text-4xl font-bold text-blue-600">0.844</p><p data-translate-key="metricAccuracy" class="text-lg font-semibold mt-2"></p></div>
+                        <div class="stat-card"><p class="text-4xl font-bold text-blue-600">0.825</p><p class="text-lg font-semibold mt-2">F1-Score</p></div>
+                        <div class="stat-card"><p class="text-4xl font-bold text-blue-600">0.96</p><p class="text-lg font-semibold mt-2">AUC</p></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Metrics_per_class.png" alt="Métricas por Clase" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Best_model_hyp.png" alt="Hiperparámetros del Mejor Modelo" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Best_models_stability.png" alt="Estabilidad del Mejor Modelo" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Best_models_stability_boxplot.png" alt="Boxplot de Estabilidad" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/roc_multi.png" alt="Curva ROC Multiclase" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/loss.png" alt="Curva de Pérdida" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                    </div>
+                </div>
+                <div class="border-t pt-8">
+                    <h3 data-translate-key="optunaTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/plot_optimization.png" alt="Gráfico de Optimización de Optuna" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Hyperparameters.png" alt="Importancia de Hiperparámetros" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                    </div>
+                </div>
+                <div class="border-t pt-8">
+                    <h3 data-translate-key="fiTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/FI_XG.png" alt="Importancia de Características de XGBoost" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/FE_variables.png" alt="Variables de Feature Engineering" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                    </div>
+                </div>
+                <div class="border-t pt-8">
+                    <h3 data-translate-key="limeTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/LIME.png" alt="Explicación LIME clase 0" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/LIME_Class1.png" alt="Explicación LIME clase 1" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fuzzy-system" class="my-12">
+            <h2 data-translate-key="fuzzySystemTitle" class="text-2xl md:text-3xl font-bold mb-8 text-center text-blue-700"></h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                         <h3 data-translate-key="fuzzyInputTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                         <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Expert_sistems_variables.png" alt="Variables de entrada del sistema difuso" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                    </div>
+                    <div>
+                         <h3 data-translate-key="linguisticDescTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                         <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Liguistic_descriptor.png" alt="Descriptores Lingüísticos" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                    </div>
+                </div>
+                 <div class="border-t pt-8 text-center">
+                    <h3 data-translate-key="membershipFuncTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Menber_functions.png" alt="Funciones de Membresía" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Menber_functions_equation.png" alt="Ecuaciones de Funciones de Membresía" class="clickable-image rounded-lg shadow-md w-full h-auto cursor-pointer">
+                    </div>
+                </div>
+                <div class="border-t pt-8 text-center">
+                    <h3 data-translate-key="segmentationTitle" class="text-2xl font-bold mb-6 text-gray-800"></h3>
+                    <div class="max-w-md mx-auto space-y-3 mb-8">
+                         <div data-translate-key="riskLevel1" class="p-4 rounded-lg text-center font-bold text-white bg-green-500 shadow-md"></div>
+                         <div data-translate-key="riskLevel2" class="p-4 rounded-lg text-center font-bold text-white bg-lime-500 shadow-md"></div>
+                         <div data-translate-key="riskLevel3" class="p-4 rounded-lg text-center font-bold text-white bg-yellow-500 shadow-md"></div>
+                         <div data-translate-key="riskLevel4" class="p-4 rounded-lg text-center font-bold text-white bg-orange-500 shadow-md"></div>
+                         <div data-translate-key="riskLevel5" class="p-4 rounded-lg text-center font-bold text-white bg-red-600 shadow-md"></div>
+                    </div>
+                    <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/out_FL.png" alt="Salida del Sistema de Lógica Difusa" class="clickable-image rounded-lg shadow-md w-full max-w-2xl h-auto mx-auto cursor-pointer">
+                </div>
+            </div>
+        </section>
+
+        <section id="expert-system" class="my-12">
+            <h2 data-translate-key="expertSystemTitle" class="text-2xl md:text-3xl font-bold mb-8 text-center text-blue-700"></h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-8">
+                 <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Expert_Sistem.png" alt="Arquitectura del Sistema Experto" class="clickable-image rounded-lg shadow-md w-full max-w-4xl h-auto mx-auto cursor-pointer">
+                 <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/output_expert_sistem.png" alt="Salida del Sistema Experto" class="clickable-image rounded-lg shadow-md w-full max-w-4xl h-auto mx-auto cursor-pointer">
+            </div>
+        </section>
+        
+        <section id="conclusions" class="my-12">
+            <h2 data-translate-key="conclusionsTitle" class="text-2xl md:text-3xl font-bold mb-8 text-center text-blue-700"></h2>
+            <div class="space-y-4 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500"><p data-translate-key="conclusion1"></p></div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500"><p data-translate-key="conclusion2"></p></div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500"><p data-translate-key="conclusion3"></p></div>
+            </div>
+        </section>
+        
+        <section id="future-work" class="my-12">
+             <h2 data-translate-key="futureWorkTitle" class="text-2xl md:text-3xl font-bold mb-8 text-center text-blue-700"></h2>
+             <div class="space-y-4 max-w-4xl mx-auto">
+                <div class="bg-white p-4 rounded-lg shadow-sm"><strong data-translate-key="future1Title"></strong><span data-translate-key="future1Desc"></span></div>
+                <div class="bg-white p-4 rounded-lg shadow-sm"><strong data-translate-key="future2Title"></strong><span data-translate-key="future2Desc"></span></div>
+                <div class="bg-white p-4 rounded-lg shadow-sm"><strong data-translate-key="future3Title"></strong><span data-translate-key="future3Desc"></span></div>
+             </div>
+        </section>
+        
+        <section class="text-center my-16">
+            <h2 data-translate-key="closingTitle" class="text-3xl font-bold text-gray-800"></h2>
+            <p data-translate-key="closingDesc" class="max-w-2xl mx-auto mt-4 text-lg text-gray-600"></p>
+        </section>
+
+    </main>
+    
+    <footer class="bg-gray-200 py-12">
+        <div id="final-author" class="container mx-auto px-4">
+             <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto">
+                <h2 data-translate-key="authorTitle" class="text-2xl font-bold mb-6 text-center text-blue-700"></h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="md:col-span-1 flex justify-center">
+                        <img src="https://raw.githubusercontent.com/SergioSilveraM/InfografiaProyecto/main/images/Profile.png" alt="Foto de Sergio Silvera Murcia" class="rounded-full w-40 h-40 object-cover border-4 border-blue-200 shadow-md">
+                    </div>
+                    <div class="md:col-span-2 text-gray-700">
+                        <h3 class="text-2xl font-bold">Sergio Silvera Murcia</h3>
+                        <p data-translate-key="authorProfileText" class="text-sm my-4"></p>
+                        
+                        <h4 data-translate-key="authorExpertiseTitle" class="font-bold mb-2"></h4>
+                        <ul data-translate-key="authorExpertiseList" class="text-sm list-disc list-inside mb-4"></ul>
+
+                        <h4 data-translate-key="authorPublicationsTitle" class="font-bold mb-2"></h4>
+                        <ul data-translate-key="authorPublicationsList" class="text-sm list-disc list-inside mb-4"></ul>
+
+                        <div class="flex items-center space-x-4 mt-4">
+                            <span data-translate-key="authorConnect" class="text-sm font-semibold"></span>
+                            <a href="https://www.linkedin.com/in/sergio-silvera-murcia/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="text-gray-500 hover:text-blue-700 transition-colors">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            </a>
+                            <a href="https://github.com/SergioSilveraM" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="text-gray-500 hover:text-gray-900 transition-colors">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-600 mt-8">
+            <p>&copy; 2025 | Proyecto de Grado - Sergio Silvera Murcia | Universidad del Norte</p>
+        </div>
+    </footer>
+
+
+    <!-- Modals -->
+    <div id="image-modal" class="modal fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4"><div class="modal-content bg-white p-2 rounded-lg relative max-w-4xl max-h-[90vh]"><button class="modal-close-btn absolute -top-3 -right-3 bg-white rounded-full h-8 w-8 text-black font-bold text-xl flex items-center justify-center">&times;</button><img id="modal-img" src="" alt="Imagen ampliada" class="object-contain max-w-full max-h-[85vh]"></div></div>
+    <div id="authors-modal-1" class="modal fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4"><div class="modal-content bg-white p-6 rounded-lg relative max-w-xl w-full max-h-[90vh] flex flex-col"><button class="modal-close-btn absolute top-2 right-4 text-gray-500 text-3xl font-bold">&times;</button><h3 data-translate-key="sotaEra1Title" class="text-xl font-bold mb-4 text-blue-800"></h3><div data-translate-key="sotaEra1Authors" class="text-sm space-y-4 overflow-y-auto"></div></div></div>
+    <div id="authors-modal-2" class="modal fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4"><div class="modal-content bg-white p-6 rounded-lg relative max-w-xl w-full max-h-[90vh] flex flex-col"><button class="modal-close-btn absolute top-2 right-4 text-gray-500 text-3xl font-bold">&times;</button><h3 data-translate-key="sotaEra2Title" class="text-xl font-bold mb-4 text-blue-800"></h3><div data-translate-key="sotaEra2Authors" class="text-sm space-y-4 overflow-y-auto"></div></div></div>
+    <div id="authors-modal-3" class="modal fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4"><div class="modal-content bg-white p-6 rounded-lg relative max-w-xl w-full max-h-[90vh] flex flex-col"><button class="modal-close-btn absolute top-2 right-4 text-gray-500 text-3xl font-bold">&times;</button><h3 data-translate-key="sotaEra3Title" class="text-xl font-bold mb-4 text-blue-800"></h3><div data-translate-key="sotaEra3Authors" class="text-sm space-y-4 overflow-y-auto"></div></div></div>
+    <div id="authors-modal-4" class="modal fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4"><div class="modal-content bg-white p-6 rounded-lg relative max-w-xl w-full max-h-[90vh] flex flex-col"><button class="modal-close-btn absolute top-2 right-4 text-gray-500 text-3xl font-bold">&times;</button><h3 data-translate-key="sotaEra4Title" class="text-xl font-bold mb-4 text-blue-800"></h3><div data-translate-key="sotaEra4Authors" class="text-sm space-y-4 overflow-y-auto"></div></div></div>
+    <div id="authors-modal-5" class="modal fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4"><div class="modal-content bg-white p-6 rounded-lg relative max-w-xl w-full max-h-[90vh] flex flex-col"><button class="modal-close-btn absolute top-2 right-4 text-gray-500 text-3xl font-bold">&times;</button><h3 data-translate-key="sotaEra5Title" class="text-xl font-bold mb-4 text-blue-800"></h3><div data-translate-key="sotaEra5Authors" class="text-sm space-y-4 overflow-y-auto"></div></div></div>
+    <div id="authors-modal-6" class="modal fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4"><div class="modal-content bg-white p-6 rounded-lg relative max-w-xl w-full max-h-[90vh] flex flex-col"><button class="modal-close-btn absolute top-2 right-4 text-gray-500 text-3xl font-bold">&times;</button><h3 data-translate-key="sotaEra6Title" class="text-xl font-bold mb-4 text-blue-800"></h3><div data-translate-key="sotaEra6Authors" class="text-sm space-y-4 overflow-y-auto"></div></div></div>
+
+    <script>
+        const textData = {
+            es: {
+                mainTitle: "Optimización de la Gestión de Cobranza en una BPO Colombiana",
+                mainSubtitle: "Integración de Modelos de Aprendizaje Automático e Inferencia Difusa",
+                authorTitle: "Sobre el Autor",
+                authorProfileTitle: "Perfil Profesional",
+                authorProfileText: "Ingeniero Industrial de la Institución Universitaria Americana y candidato a Magíster en Analítica de Datos de la Universidad del Norte. Apasionado por transformar datos en decisiones estratégicas y construir soluciones inteligentes que aporten valor al negocio.",
+                authorExpertiseTitle: "Áreas de Experiencia",
+                authorExpertiseList: `<li>Sistemas de Calidad</li><li>Análisis Avanzado de Datos</li><li>Machine Learning & Deep Learning</li><li>Sistemas Expertos</li>`,
+                authorPublicationsTitle: "Publicaciones",
+                authorPublicationsList: `<li>Optimización de la Gestión de Cobranza en una BPO Colombiana: Integración de Modelos de Aprendizaje Automático e Inferencia Difusa (Trabajo de grado candidato)</li>`,
+                authorConnect: "Conecta conmigo:",
+                contextTitle: "Contexto y Relevancia del Problema",
+                contextP1: "La gestión de créditos es clave en la estabilidad financiera. Sin embargo, todo crédito implica un riesgo: el incumplimiento del deudor. Según la Federación Latinoamericana de Bancos, el indicador de morosidad ha aumentado sostenidamente en América Latina, pasando del 2,2% en 2022 al 2,67% en 2023. Esta tendencia subraya la necesidad de sistemas de gestión de riesgo más eficaces.",
+                contextP2: "En Colombia, este indicador ha oscilado entre el 4% y el 5%, con un aumento reciente que evidencia una problemática que merece atención. Una gestión de cobranza ineficiente no solo genera pérdidas, sino que afecta la liquidez, estabilidad y capacidad operativa de la entidad.",
+                imageCaption: "Índice de Morosidad en Países de LATAM. Fuente: FELABAN.",
+                challengeTitle: "El Desafío: Hacia una Cobranza Inteligente",
+                problemQuestionTitle: "Pregunta Problema",
+                problemQuestion: "¿Cómo puede una BPO en Colombia optimizar la gestión y recuperación de cartera vencida mediante un sistema inteligente que combine técnicas de aprendizaje automático y lógica difusa, con el fin de segmentar clientes y diseñar estrategias de cobranza personalizadas, considerando las características de los datos disponibles?",
+                proposalTitle: "Propuesta y Objetivos",
+                proposalSubtitle: "Propuesta de Solución",
+                proposalText: "Integrar el poder predictivo de modelos como XGBoost con la flexibilidad y explicabilidad de la lógica difusa, construyendo un sistema robusto para apoyar las decisiones operativas en contextos financieros.",
+                objectivesTitle: "Objetivos del Proyecto",
+                obj1: "Construir un sistema híbrido de segmentación que integre modelos de machine learning con un sistema difuso basado en reglas.",
+                obj2: "Capturar la incertidumbre y subjetividad usando lógica difusa para modelar variables complejas (ej. voluntad de pago, contactabilidad).",
+                obj3: "Diseñar reglas de segmentación lingüísticas basadas en conocimiento experto y variables modeladas.",
+                obj4: "Facilitar las decisiones operativas proveyendo un sistema consultable para que los agentes adapten sus estrategias de gestión.",
+                theoryTitle: "Fundamentos Teóricos",
+                theoreticalFrameworkTitle: "Marco Teórico",
+                mlConceptsTitle: "Conceptos de Machine Learning",
+                mlConceptsDesc: `<li><strong>Árboles de Decisión (CART):</strong> Algoritmos que dividen los datos en subconjuntos basados en las características para tomar decisiones. Son muy interpretables.</li><li><strong>Random Forest (RF):</strong> Técnica de ensamblado que construye múltiples árboles de decisión y combina sus predicciones para mejorar la precisión y evitar el sobreajuste.</li><li><strong>Boosting (XGBoost):</strong> Método de ensamblado secuencial donde cada nuevo modelo corrige los errores del anterior, resultando en un modelo final muy potente y preciso.</li><li><strong>Interpretabilidad (LIME):</strong> Técnicas para explicar las predicciones de modelos complejos (caja negra), ayudando a entender el 'porqué' de una decisión.</li>`,
+                financialConceptsTitle: "Conceptos Financieros y de Cartera",
+                financialConceptsDesc: `<li><strong>Riesgo Crediticio:</strong> La probabilidad de que una entidad sufra una pérdida económica debido al incumplimiento de las obligaciones de pago por parte de un deudor.</li><li><strong>Gestión de Cartera:</strong> El conjunto de estrategias y procesos para administrar los créditos otorgados, maximizar la recuperación y minimizar las pérdidas.</li><li><strong>Cartera Vencida:</strong> Aquella parte de la cartera de créditos cuyos pagos no han sido realizados en las fechas pactadas contractualmente.</li>`,
+                evaluationConceptsTitle: "Evaluación y Lógica Difusa",
+                evaluationConceptsDesc: `<li><strong>Lógica Difusa:</strong> Permite modelar la incertidumbre y la imprecisión, tratando con conceptos vagos (ej. riesgo 'medio-alto') en lugar de valores binarios (verdadero/falso), lo que la hace ideal para decisiones humanas.</li><li><strong>Validación Cruzada (CV):</strong> Técnica que divide los datos en 'pliegues' (folds) para entrenar y probar el modelo en diferentes subconjuntos, asegurando que los resultados sean robustos y generalizables.</li><li><strong>CV Anidada:</strong> Un método más robusto de CV, usado para optimizar hiperparámetros y evaluar el rendimiento del modelo de forma simultánea y no sesgada. Es computacionalmente más costoso pero previene fugas de información.</li>`,
+                sotaTitle: "Estado del Arte: La Evolución del Credit Scoring",
+                cooccurrenceCaption: "Red de co-ocurrencia de términos en la literatura.",
+                sotaAppsTitle: "Aplicaciones de ML en Riesgo Crediticio",
+                sotaApp1: "• Modelos de respuesta para búsqueda de clientes potenciales.",
+                sotaApp2: "• Modelos de predicción de pérdida (churn) para retención de clientes.",
+                sotaApp3: "• Modelos de detección de fraudes.",
+                sotaApp4: "• Modelos de predicción de pagos atrasados, para la gestión proactiva de cobranzas. (Ej. Kim & Kang, 2016)",
+                sotaEra1Title: "Los Inicios: De la Estadística a la Regresión Logística",
+                sotaEra1Desc: "Los primeros modelos se basaron en algoritmos lineales (LDA, SA), limitados para capturar relaciones no lineales. La Regresión Logística se convirtió en la predilecta por su interpretabilidad directa.",
+                viewAuthors: "Ver Autores y Estudios Clave",
+                sotaEra1Authors: `<p><strong>[14] Sarlija et al. (2009):</strong> Emplea Análisis de Supervivencia para predecir el tiempo hasta la mora, evaluando el costo de los errores tipo I y II.</p><p><strong>[15] Támara Ayus et al. (2022):</strong> Compara LDA con Regresión Logística (LR), destacando la LR como más eficaz con un AUC de 0.81.</p><p><strong>[16-18] Varios Autores:</strong> Demuestran la superioridad de la LR en scoring y segmentación, logrando métricas >80% y reducciones de costos del 20%.</p>`,
+                sotaEra2Title: "El Despertar del Machine Learning",
+                sotaEra2Desc: "Para suplir la necesidad de modelar la no linealidad, surgen modelos no paramétricos como Árboles de Decisión, Random Forest y SVM, aunque a costa de una menor interpretabilidad y mayores tiempos de cómputo.",
+                sotaEra2Authors: `<p><strong>[19] Satchidananda & Simha (2006):</strong> Muestran que los Árboles de Decisión superan a la LR en predicción de riesgo crediticio, alcanzando precisiones cercanas al 90%.</p><p><strong>[20-23] Varios Autores:</strong> Confirman la superioridad de Random Forest en problemas de scoring y predicción de impagos, superando a métodos tradicionales en producción.</p><p><strong>[24] Shetty & Manoj (2019):</strong> Utilizan SVM con técnicas de balanceo (SMOTE, ADASYN), demostrando que SVM equilibrada tiene el mejor desempeño para predecir impagos de tarjetas de crédito.</p>`,
+                sotaEra3Title: "El Poder del Deep Learning y Boosting",
+                sotaEra3Desc: "La búsqueda de mayor potencia predictiva lleva al uso de modelos de Boosting y Redes Neuronales. Los modelos de Boosting, como XGBoost, destacan por su alto rendimiento y eficiencia.",
+                sotaEra3Authors: `<p><strong>[26-27] Varios Autores:</strong> Demuestran que métodos de Deep Learning como Redes Neuronales superan a modelos tradicionales en la detección de insolvencia, con AUC >0.87.</p><p><strong>[28] Cifuentes Baquero et al. (2022):</strong> Compara XGBoost frente a otros modelos, resultando ganador. Destaca su ventaja en interpretabilidad al poder extraer la importancia de variables.</p><p><strong>[29-30] Varios Autores:</strong> Presentan estudios donde los modelos de gradient boosting superan a otras alternativas, especialmente en escenarios con datos desbalanceados.</p>`,
+                sotaEra4Title: "Más Allá del Boosting: Refinando con Ensembles",
+                sotaEra4Desc: "Para dar un paso más en precisión, se comienzan a usar ensambles complejos y fusiones de modelos, logrando resultados superiores, pero sacrificando aún más la interpretabilidad y los tiempos de optimización.",
+                sotaEra4Authors: `<p><strong>[31] Dumitrescu et al. (2022):</strong> Propone un modelo de LR penalizada que incorpora reglas de árboles de decisión, logrando un equilibrio único entre rendimiento e interpretabilidad.</p><p><strong>[32] Sigrist & Hirnschall (2019):</strong> Integran árboles con gradient boosting para fortalecer modelos Tobit, superando a redes neuronales sin necesidad de balanceo.</p><p><strong>[35] Gao et al. (2021):</strong> Emplea un modelo híbrido XGBoost-LSTM para predecir impagos de tarjetas de crédito, manteniendo una interpretabilidad razonable y superando a SVM y AdaBoost.</p>`,
+                sotaEra5Title: "El Arte de Explicar la Caja Negra",
+                sotaEra5Desc: "La creciente complejidad de los modelos hace indispensable el uso de técnicas de interpretabilidad como LIME y SHAP para entender sus decisiones, crucial por confianza y regulaciones legales.",
+                sotaEra5Authors: `<p><strong>[39] Xia et al. (2017):</strong> Utilizan la importancia de características de modelos de árboles para facilitar la integración con sistemas de inferencia, como los sistemas difusos.</p><p><strong>[42] Martens et al. (2007):</strong> Extraen reglas simbólicas (if-then) de modelos SVM para combinar la precisión de modelos complejos con la claridad de los simbólicos.</p><p><strong>[43] Lundberg & Lee (2017):</strong> Proponen SHAP, una técnica basada en teoría de juegos para calcular la contribución de cada variable a una predicción, generando explicaciones consistentes y estables.</p>`,
+                sotaEra6Title: "Del Modelo al Negocio: Transparencia y Auditoría",
+                sotaEra6Desc: "La tendencia actual apunta a construir soluciones robustas e interpretables. La integración de ML con sistemas externos como la Lógica Difusa representa una línea de investigación emergente y con gran potencial para cumplir con las exigencias legales de explicabilidad.",
+                sotaEra6Authors: `<p><strong>[45] Bücker et al. (2021):</strong> Desmitifican el uso de modelos complejos en procesos regulados, demostrando que pueden ser explicables con las técnicas adecuadas.</p><p><strong>[46] Amézquita Reyes & León Castro (2012):</strong> Emplean un sistema de inferencia difusa con algoritmos genéticos para optimizar un modelo de scoring, destacando su capacidad para gestionar la incertidumbre.</p><p><strong>[47] Gómez Jaramillo (2012):</strong> Revisa el uso de Lógica Difusa y otros métodos alternativos para lograr un equilibrio entre precisión e interpretabilidad en scoring.</p>`,
+                sotaConclusion: "La revisión teórica y bibliográfica anterior proporciona el marco conceptual necesario para comprender los fundamentos y características de los modelos supervisados y sistemas inteligentes que serán evaluados en este estudio.",
+                methodologyTitle: "Metodología del Proyecto",
+                methodologyDiagramTitle: "Diagrama General de la Metodología",
+                edaTitle: "Análisis Exploratorio de Datos (EDA)",
+                targetVarTitle: "Distribución de Variable Objetivo",
+                targetVarDesc: "El conjunto de datos presenta un desbalance significativo en la variable objetivo ('Estado'), con una mayoría de casos en la categoría 'CAIDO'. Este desequilibrio debe ser abordado en la etapa de preprocesamiento para evitar sesgos en el modelo.",
+                tableHeaderState: "Estado",
+                tableHeaderProp: "Proporción (%)",
+                tableHeaderCount: "Conteo",
+                edaPlotsTitle: "Visualización de Variables Clave",
+                benchmarkTitle: "Benchmark de Modelos y Optimización",
+                nestedCvTitle: "Esquema de Validación Cruzada Anidada",
+                nestedCvDesc: "Para asegurar la robustez y evitar el sesgo optimista, se utilizó una validación cruzada anidada. El bucle externo evalúa el rendimiento del modelo, mientras que el bucle interno se encarga de la optimización de hiperparámetros para cada pliegue.",
+                outerLoop: "Bucle Externo (5 Folds de Evaluación)",
+                innerLoop: "Bucle Interno (5 Folds de Optimización)",
+                hyperparamsTitle: "Hiperparámetros Optimizados",
+                metricsTitle: "Métricas de Desempeño Obtenidas",
+                benchmarkConclusion: "Tras la optimización y validación, las métricas ponderadas (weighted) y macro F1-Score indican que el modelo XGBoost consistentemente supera a los demás, demostrando el mejor equilibrio entre precisión y recall para todas las clases. Esto lo establece como el modelo idóneo para la siguiente fase del proyecto.",
+                resultsTitle: "Análisis de Resultados: Modelo Campeón (XGBoost)",
+                championModelTitle: "Rendimiento General del Modelo",
+                metricAccuracy: "Precisión Global",
+                optunaTitle: "Optimización con Optuna",
+                fiTitle: "Importancia de Características (Feature Importance)",
+                limeTitle: "Explicabilidad del Modelo (LIME)",
+                fuzzySystemTitle: "Sistema de Inferencia Difusa (SID)",
+                fuzzyInputTitle: "Variables de Entrada y Reglas",
+                linguisticDescTitle: "Descriptores Lingüísticos",
+                membershipFuncTitle: "Funciones de Membresía",
+                expertSystemTitle: "Sistema Experto: Arquitectura Final",
+                segmentationTitle: "Segmentación de Riesgo de Salida",
+                riskLevel1: "Nivel 1: Riesgo Muy Bajo",
+                riskLevel2: "Nivel 2: Riesgo Bajo",
+                riskLevel3: "Nivel 3: Riesgo Medio",
+                riskLevel4: "Nivel 4: Riesgo Alto",
+                riskLevel5: "Nivel 5: Riesgo Crítico",
+                segmentationDesc: "Esta clasificación permite a la BPO focalizar sus esfuerzos, asignando estrategias de cobranza diferenciadas para cada nivel y optimizando la asignación de recursos.",
+                conclusionsTitle: "Conclusiones",
+                conclusion1: "<strong>Integración Exitosa:</strong> Se logró el objetivo principal al integrar exitosamente un modelo XGBoost con un sistema de inferencia difusa, creando un sistema experto robusto para gestionar la incertidumbre en contextos financieros.",
+                conclusion2: "<strong>Rendimiento Superior de XGBoost:</strong> El modelo XGBoost demostró ser el de mejor desempeño (AUC 0.96, F1-Score 0.825) tras una validación rigurosa, consolidándose como una herramienta sólida para la clasificación de riesgo.",
+                conclusion3: "<strong>Interpretabilidad y Aplicabilidad:</strong> A través de LIME, se logró la interpretabilidad del modelo, fortaleciendo la confianza y facilitando el cumplimiento regulatorio. El pipeline funcional desarrollado está listo para ser usado en la toma de decisiones estratégicas de cobranza.",
+                futureWorkTitle: "Trabajos Futuros y Recomendaciones",
+                future1Title: "Despliegue Integral: ","future1Desc":"Completar la solución con un despliegue robusto en producción, incluyendo una interfaz gráfica para automatizar el flujo completo, desde la carga de datos hasta la generación de informes.",
+                future2Title: "Expansión del SID: ","future2Desc":"Extender el sistema de inferencia difusa incorporando nuevas variables relevantes sugeridas por expertos o derivadas de nuevas fuentes de datos para mejorar la precisión de la segmentación.",
+                future3Title: "Validación y Optimización Adaptativa: ","future3Desc":"Validar el sistema con datos de otras campañas operativas y cuantificar su impacto real. Se plantea incorporar una lógica de optimización que ajuste automáticamente las reglas del sistema difuso según métricas de desempeño.",
+                closingTitle: "Gracias por su atención",
+                closingDesc: "Este proyecto sienta una base sólida para el futuro de la cobranza inteligente, demostrando el poder de combinar la precisión del Machine Learning con la sabiduría del conocimiento experto.",
+            },
+            en: {
+                mainTitle: "Optimizing Debt Collection Management in a Colombian BPO",
+                mainSubtitle: "Integration of Machine Learning Models and Fuzzy Inference for Client Segmentation and Prioritization",
+                authorTitle: "About the Author",
+                authorProfileTitle: "Professional Profile",
+                authorProfileText: "Industrial Engineer from Institución Universitaria de América and a candidate for a Master's in Data Analytics for Business from Universidad del Norte. Passionate about transforming data into strategic decisions and building intelligent solutions that add business value.",
+                authorExpertiseTitle: "Areas of Expertise",
+                authorExpertiseList: `<li>Quality Systems</li><li>Advanced Data Analysis</li><li>Machine Learning & Deep Learning</li><li>Expert Systems</li>`,
+                authorPublicationsTitle: "Publications",
+                authorPublicationsList: `<li>Optimizing Debt Collection Management in a Colombian BPO: Integration of Machine Learning Models and Fuzzy Inference for Client Segmentation and Prioritization (Candidate thesis work)</li>`,
+                authorConnect: "Connect with me:",
+                contextTitle: "Problem Context and Relevance",
+                contextP1: "Credit management is key to financial stability. However, every loan carries a risk: debtor default. According to the Latin American Banking Federation, the delinquency rate has steadily increased in Latin America, rising from 2.2% in 2022 to 2.67% in 2023. This trend highlights the need for more effective risk management systems.",
+                contextP2: "In Colombia, this indicator has ranged between 4% and 5%, with a recent increase that signals a problem requiring attention. Inefficient collection management not only generates losses but also affects the entity's liquidity, stability, and operational capacity.",
+                imageCaption: "Delinquency Rate in LATAM Countries. Source: FELABAN.",
+                challengeTitle: "The Challenge: Towards Intelligent Collection",
+                problemQuestionTitle: "Problem Question",
+                problemQuestion: "How can a BPO in Colombia optimize the management and recovery of its overdue portfolio through an intelligent system that combines machine learning and fuzzy logic techniques to segment clients and design personalized collection strategies, considering the characteristics of the available data?",
+                proposalTitle: "Proposal and Objectives",
+                proposalSubtitle: "Proposed Solution",
+                proposalText: "Integrate the predictive power of models like XGBoost with the flexibility and explainability of fuzzy logic, building a robust system to support operational decisions in financial contexts.",
+                objectivesTitle: "Project Objectives",
+                obj1: "Build a hybrid segmentation system that integrates machine learning models with a rule-based fuzzy system.",
+                obj2: "Capture uncertainty and subjectivity using fuzzy logic to model complex variables (e.g., willingness to pay, contactability).",
+                obj3: "Design linguistic segmentation rules based on expert knowledge and modeled variables.",
+                obj4: "Facilitate operational decisions by providing a queryable system for agents to adapt their management strategies.",
+                theoryTitle: "Theoretical Foundations",
+                theoreticalFrameworkTitle: "Theoretical Framework",
+                mlConceptsTitle: "Machine Learning Concepts",
+                mlConceptsDesc: `<li><strong>Decision Trees (CART):</strong> Algorithms that split data into subsets based on features to make decisions. They are highly interpretable.</li><li><strong>Random Forest (RF):</strong> An ensemble technique that builds multiple decision trees and combines their predictions to improve accuracy and prevent overfitting.</li><li><strong>Boosting (XGBoost):</strong> A sequential ensemble method where each new model corrects the errors of the previous one, resulting in a very powerful and accurate final model.</li><li><strong>Interpretability (LIME):</strong> Techniques to explain the predictions of complex (black box) models, helping to understand the 'why' behind a decision.</li>`,
+                financialConceptsTitle: "Financial and Portfolio Concepts",
+                financialConceptsDesc: `<li><strong>Credit Risk:</strong> The probability of an entity suffering an economic loss due to a debtor's failure to meet payment obligations.</li><li><strong>Portfolio Management:</strong> The set of strategies and processes to manage granted loans, maximize recovery, and minimize losses.</li><li><strong>Non-Performing Loans:</strong> The portion of the loan portfolio whose payments have not been made on the contractually agreed dates.</li>`,
+                evaluationConceptsTitle: "Evaluation and Fuzzy Logic",
+                evaluationConceptsDesc: `<li><strong>Fuzzy Logic:</strong> Allows modeling uncertainty and imprecision, dealing with vague concepts (e.g., 'medium-high' risk) instead of binary values (true/false), making it ideal for human-like decisions.</li><li><strong>Cross-Validation (CV):</strong> A technique that splits data into 'folds' to train and test the model on different subsets, ensuring the results are robust and generalizable.</li><li><strong>Nested CV:</strong> A more robust version of CV, used to optimize hyperparameters and evaluate model performance simultaneously and unbiasedly. It is computationally more expensive but prevents information leakage.</li>`,
+                sotaTitle: "State of the Art: The Evolution of Credit Scoring",
+                cooccurrenceCaption: "Co-occurrence network of terms in the literature.",
+                sotaAppsTitle: "ML Applications in Credit Risk",
+                sotaApp1: "• Response models for prospecting potential customers.",
+                sotaApp2: "• Customer churn prediction models for customer retention.",
+                sotaApp3: "• Fraud detection models.",
+                sotaApp4: "• Late payment prediction models for proactive collection management. (e.g., Kim & Kang, 2016)",
+                sotaEra1Title: "The Beginnings: From Statistics to Logistic Regression",
+                sotaEra1Desc: "The first models were based on linear algorithms (LDA, SA), limited in capturing non-linear relationships. Logistic Regression became the favorite due to its direct interpretability.",
+                viewAuthors: "View Key Authors & Studies",
+                sotaEra1Authors: `<p><strong>[14] Sarlija et al. (2009):</strong> Uses Survival Analysis to predict time to default, evaluating the cost of Type I and II errors.</p><p><strong>[15] Támara Ayus et al. (2022):</strong> Compares LDA with Logistic Regression (LR), highlighting LR as more effective with an AUC of 0.81.</p><p><strong>[16-18] Various Authors:</strong> Demonstrate the superiority of LR in scoring and segmentation, achieving metrics >80% and cost reductions of 20%.</p>`,
+                sotaEra2Title: "The Machine Learning Awakening",
+                sotaEra2Desc: "To address the need for non-linearity, non-parametric models like Decision Trees, Random Forest, and SVM emerged, albeit at the cost of lower interpretability and higher computation times.",
+                sotaEra2Authors: `<p><strong>[19] Satchidananda & Simha (2006):</strong> Show that Decision Trees outperform LR in credit risk prediction, achieving accuracies close to 90%.</p><p><strong>[20-23] Various Authors:</strong> Confirm the superiority of Random Forest in scoring and default prediction problems, outperforming traditional methods in production.</p><p><strong>[24] Shetty & Manoj (2019):</strong> Use SVM with balancing techniques (SMOTE, ADASYN), demonstrating that a balanced SVM performs best for predicting credit card defaults.</p>`,
+                sotaEra3Title: "The Power of Deep Learning and Boosting",
+                sotaEra3Desc: "The quest for greater predictive power leads to the use of Boosting models and Neural Networks. Boosting models, like XGBoost, stand out for their high performance and efficiency.",
+                 sotaEra3Authors: `<p><strong>[26-27] Various Authors:</strong> Show that Deep Learning methods like Neural Networks outperform traditional models in insolvency detection, with AUC >0.87.</p><p><strong>[28] Cifuentes Baquero et al. (2022):</strong> Compare XGBoost against other models, with it emerging as the winner. They highlight its interpretability advantage in extracting feature importance.</p><p><strong>[29-30] Various Authors:</strong> Present studies where gradient boosting models consistently outperform other alternatives, especially in scenarios with imbalanced data.</p>`,
+                sotaEra4Title: "Beyond Boosting: Refining with Ensembles",
+                sotaEra4Desc: "To take precision a step further, complex ensembles and model fusions are used, achieving superior results but further sacrificing interpretability and optimization times.",
+                sotaEra4Authors: `<p><strong>[31] Dumitrescu et al. (2022):</strong> Propose a penalized LR model incorporating decision tree rules, achieving a unique balance between performance and interpretability.</p><p><strong>[32] Sigrist & Hirnschall (2019):</strong> Integrate trees with gradient boosting to strengthen Tobit models, outperforming neural networks without needing balancing.</p><p><strong>[35] Gao et al. (2021):</strong> Use a hybrid XGBoost-LSTM model to predict credit card defaults, maintaining reasonable interpretability and outperforming SVM and AdaBoost.</p>`,
+                sotaEra5Title: "The Art of Explaining the Black Box",
+                sotaEra5Desc: "The growing complexity of models makes interpretability techniques like LIME and SHAP indispensable for understanding their decisions, crucial for trust and legal regulations.",
+                sotaEra5Authors: `<p><strong>[39] Xia et al. (2017):</strong> Use feature importance from tree-based models to facilitate integration with inference systems, such as fuzzy systems.</p><p><strong>[42] Martens et al. (2007):</strong> Extract symbolic rules (if-then) from SVM models to combine the precision of complex models with the clarity of symbolic ones.</p><p><strong>[43] Lundberg & Lee (2017):</strong> Propose SHAP, a game theory-based technique to calculate the contribution of each feature to a prediction, generating consistent and stable explanations.</p>`,
+                sotaEra6Title: "From Model to Business: Transparency and Auditing",
+                sotaEra6Desc: "The current trend aims to build robust and interpretable solutions. The integration of ML with external systems like Fuzzy Logic represents an emerging and high-potential research line to meet legal explainability requirements.",
+                 sotaEra6Authors: `<p><strong>[45] Bücker et al. (2021):</strong> Demystify the use of complex models in regulated processes, showing they can be explainable with the right techniques.</p><p><strong>[46] Amézquita Reyes & León Castro (2012):</strong> Use a fuzzy inference system with genetic algorithms to optimize a scoring model, highlighting its ability to manage uncertainty.</p><p><strong>[47] Gómez Jaramillo (2012):</strong> Reviews the use of Fuzzy Logic and other alternative methods to achieve a balance between precision and interpretability in scoring.</p>`,
+                sotaConclusion: "The preceding theoretical and bibliographic review provides the necessary conceptual framework to understand the foundations and characteristics of the supervised models and intelligent systems to be evaluated in this study.",
+                methodologyTitle: "Project Methodology",
+                methodologyDiagramTitle: "General Methodology Diagram",
+                edaTitle: "Exploratory Data Analysis (EDA)",
+                targetVarTitle: "Target Variable Distribution",
+                targetVarDesc: "The dataset shows a significant imbalance in the target variable ('Status'), with a majority of cases in the 'CAIDO' (Defaulted) category. This imbalance must be addressed in the preprocessing stage to avoid model bias.",
+                tableHeaderState: "Status",
+                tableHeaderProp: "Proportion (%)",
+                tableHeaderCount: "Count",
+                edaPlotsTitle: "Key Variable Visualization",
+                benchmarkTitle: "Model Benchmarking and Optimization",
+                nestedCvTitle: "Nested Cross-Validation Scheme",
+                nestedCvDesc: "To ensure robustness and avoid optimistic bias, a nested cross-validation approach was used. The outer loop evaluates the model's performance, while the inner loop handles hyperparameter optimization for each fold.",
+                outerLoop: "Outer Loop (5-Fold Evaluation)",
+                innerLoop: "Inner Loop (5-Fold Optimization)",
+                hyperparamsTitle: "Optimized Hyperparameters",
+                metricsTitle: "Obtained Performance Metrics",
+                benchmarkConclusion: "After optimization and validation, the weighted and macro F1-Score metrics indicate that the XGBoost model consistently outperforms the others, demonstrating the best balance between precision and recall across all classes. This establishes it as the ideal model for the next phase of the project.",
+                resultsTitle: "Results Analysis: Champion Model (XGBoost)",
+                championModelTitle: "Overall Model Performance",
+                metricAccuracy: "Overall Accuracy",
+                optunaTitle: "Optimization with Optuna",
+                fiTitle: "Feature Importance",
+                limeTitle: "Model Explainability (LIME)",
+                fuzzySystemTitle: "Fuzzy Inference System (FIS)",
+                fuzzyInputTitle: "Input Variables and Rules",
+                linguisticDescTitle: "Linguistic Descriptors",
+                membershipFuncTitle: "Membership Functions",
+                expertSystemTitle: "Expert System: Final Architecture",
+                segmentationTitle: "Output: Risk Segmentation",
+                riskLevel1: "Level 1: Very Low Risk",
+                riskLevel2: "Level 2: Low Risk",
+                riskLevel3: "Level 3: Medium Risk",
+                riskLevel4: "Level 4: High Risk",
+                riskLevel5: "Level 5: Critical Risk",
+                segmentationDesc: "This classification allows the BPO to focus its efforts, assigning differentiated collection strategies for each level and optimizing resource allocation.",
+                conclusionsTitle: "Conclusions",
+                conclusion1: "<strong>Successful Integration:</strong> The main objective was achieved by successfully integrating an XGBoost model with a fuzzy inference system, creating a robust expert system to manage uncertainty in financial contexts.",
+                conclusion2: "<strong>Superior Performance of XGBoost:</strong> The XGBoost model proved to be the top performer (AUC 0.96, F1-Score 0.825) after rigorous validation, establishing itself as a solid tool for risk classification.",
+                conclusion3: "<strong>Interpretability and Applicability:</strong> Through LIME, model interpretability was achieved, strengthening trust and facilitating regulatory compliance. The developed functional pipeline is ready to be used for strategic collection decision-making.",
+                futureWorkTitle: "Future Work and Recommendations",
+                future1Title: "Comprehensive Deployment: ","future1Desc":"Complete the solution with a robust deployment in a production environment, including a graphical interface to automate the entire workflow, from data loading to report generation.",
+                future2Title: "FIS Expansion: ","future2Desc":"Extend the fuzzy inference system by incorporating new relevant variables suggested by domain experts or derived from additional data sources to improve segmentation accuracy.",
+                future3Title: "Validation and Adaptive Optimization: ","future3Desc":"Validate the system with data from other operational campaigns and quantify its real impact. It is proposed to incorporate an adaptive optimization logic for the fuzzy system rules based on real performance metrics.",
+                closingTitle: "Thank you for your attention",
+                closingDesc: "This project lays a solid foundation for the future of intelligent collections, demonstrating the power of combining the precision of Machine Learning with the wisdom of expert knowledge.",
+            }
+        };
+
+        const esBtn = document.getElementById('es-btn');
+        const enBtn = document.getElementById('en-btn');
+
+        function switchLanguage(lang) {
+            document.documentElement.lang = lang;
+            const elements = document.querySelectorAll('[data-translate-key]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-translate-key');
+                if (textData[lang][key]) {
+                    const target = el.querySelector('span.flex-1') || el;
+                    target.innerHTML = textData[lang][key];
+                }
+            });
+
+            if(lang === 'es') {
+                esBtn.classList.add('active');
+                enBtn.classList.remove('active');
+            } else {
+                enBtn.classList.add('active');
+                esBtn.classList.remove('active');
+            }
+        }
+
+        esBtn.addEventListener('click', () => switchLanguage('es'));
+        enBtn.addEventListener('click', () => switchLanguage('en'));
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            switchLanguage('es');
+
+            const accordions = document.querySelectorAll('.accordion-header');
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', () => {
+                    const content = accordion.nextElementSibling;
+                    const icon = accordion.querySelector('.accordion-icon');
+                    
+                    content.classList.toggle('open');
+                    icon.classList.toggle('open');
+                });
+            });
+
+            // Modal Logic
+            const imageModal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            
+            document.querySelectorAll('.clickable-image').forEach(img => {
+                img.addEventListener('click', (e) => {
+                    modalImg.src = e.target.src;
+                    imageModal.classList.remove('hidden');
+                    imageModal.classList.add('flex');
+                });
+            });
+            
+            const authorModalTriggers = document.querySelectorAll('.author-modal-trigger');
+            authorModalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const modalId = trigger.getAttribute('data-modal-target');
+                    const modal = document.getElementById(modalId);
+                    if(modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                    }
+                });
+            });
+
+            const closeButtons = document.querySelectorAll('.modal-close-btn');
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const modal = btn.closest('.modal');
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                });
+            });
+
+             window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.classList.add('hidden');
+                    event.target.classList.remove('flex');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
